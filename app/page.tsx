@@ -9,13 +9,17 @@ import { EntryForm, EntryRow } from "@/components/Entries";
 import { MonthView, WeekView } from "@/components/Views";
 import { Summary } from "@/components/Summary";
 import { TagManager } from "@/components/TagManager";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import { AuthForm } from "@/components/AuthForm";
+import { Settings } from "@/components/Settings";
 
-type View = "day" | "week" | "month" | "tags";
+type View = "day" | "week" | "month" | "tags" | "settings";
 const VIEWS: { id: View; label: string }[] = [
   { id: "day", label: "Day" },
   { id: "week", label: "Week" },
   { id: "month", label: "Month" },
   { id: "tags", label: "Tags" },
+  { id: "settings", label: "Settings" },
 ];
 
 function App() {
@@ -72,7 +76,11 @@ function App() {
         </nav>
       </header>
 
-      {view === "tags" ? (
+      {view === "settings" ? (
+        <main className="page narrow">
+          <Settings />
+        </main>
+      ) : view === "tags" ? (
         <main className="page">
           <TagManager />
         </main>
@@ -121,7 +129,18 @@ function DayList({ date }: { date: string }) {
 
 export default function Page() {
   return (
-    <LedgerProvider>
+    <AuthProvider>
+      <Gate />
+    </AuthProvider>
+  );
+}
+
+function Gate() {
+  const { user, ready } = useAuth();
+  if (!ready) return null;
+  if (!user) return <AuthForm />;
+  return (
+    <LedgerProvider userId={String(user.id)}>
       <App />
     </LedgerProvider>
   );

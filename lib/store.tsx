@@ -64,21 +64,21 @@ type Ctx = {
 
 const LedgerContext = createContext<Ctx | null>(null);
 
-export function LedgerProvider({ children }: { children: ReactNode }) {
+export function LedgerProvider({ children, userId }: { children: ReactNode; userId: string }) {
   const [data, setData] = useState<Data>({ general: [], specific: [], entries: [] });
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     repository
-      .load()
+      .load(userId)
       .then((d) => setData(d ?? seed()))
       .catch(() => setData(seed()))
       .finally(() => setReady(true));
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    if (ready) void repository.save(data);
-  }, [data, ready]);
+    if (ready) void repository.save(userId, data);
+  }, [data, ready, userId]);
 
   const tag = useCallback(
     (kind: Kind, id: string) => data[kind].find((t) => t.id === id),
