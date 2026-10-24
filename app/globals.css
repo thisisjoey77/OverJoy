@@ -75,6 +75,10 @@ a.brand { color: inherit; }
 .bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
 .bar-right { display: flex; align-items: center; gap: 8px; }
 .total { margin-right: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.export-control { position: relative; display: inline-flex; }
+.export-btn { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.export-btn:disabled { opacity: .65; cursor: progress; }
+.export-error { position: absolute; top: calc(100% + 6px); right: 0; width: max-content; max-width: 280px; color: #b3261e; font-size: 12px; z-index: 2; }
 
 .btn {
   height: 34px; padding: 0 14px; background: var(--bg);

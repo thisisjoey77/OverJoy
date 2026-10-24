@@ -9,6 +9,7 @@ import { cursorFromParam, dayPath, pathFor, stepDate, type CalView } from "@/lib
 import { EntryForm, EntryRow } from "./Entries";
 import { MonthView, WeekView } from "./Views";
 import { Summary } from "./Summary";
+import { ExportMonth } from "./ExportMonth";
 
 export function GoToToday({ view }: { view: CalView }) {
   const router = useRouter();
@@ -58,6 +59,7 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
       <div className="bar">
         <h1>{label}</h1>
         <div className="bar-right">
+          {view === "month" && <ExportMonth month={cursor.slice(0, 7)} />}
           <span className="total">{money(total)}</span>
           <Link className="btn" href={pathFor(view, stepDate(view, cur, -1))} aria-label="Previous">‹</Link>
           <Link className="btn" href={pathFor(view, new Date())}>Today</Link>
