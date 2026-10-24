@@ -148,7 +148,7 @@ function TagList({ kind, title, hint }: { kind: Kind; title: string; hint: strin
                   setPendingDelete(null);
                 }}
               >
-                Remove tag
+                Apply
               </button>
             </div>
           </section>
