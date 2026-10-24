@@ -16,6 +16,7 @@ type Ctx = {
   updateProfile: (p: Profile) => Promise<void>;
   changePassword: (current: string, next: string) => Promise<void>;
   deleteAccount: (password: string) => Promise<void>;
+  checkUsername: (username: string) => Promise<{ available: boolean }>;
 };
 
 const AuthContext = createContext<Ctx | null>(null);
@@ -71,6 +72,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await api("/me", { method: "DELETE", body: { password }, token });
         signOut();
       },
+      checkUsername: (username) =>
+        api<{ available: boolean }>(
+          `/auth/check-username?username=${encodeURIComponent(username)}`,
+          { token },
+        ),
     }),
     [ready, user, token, start, signOut],
   );

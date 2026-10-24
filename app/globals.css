@@ -168,6 +168,24 @@ label input { color: var(--text); font-size: 14px; }
 .settings h2 { margin-bottom: 12px; }
 .stack { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
 .stack label { width: 100%; }
+
+.ind-wrap { position: relative; display: flex; }
+.ind-wrap input { width: 100%; padding-right: 36px; }
+.ind-wrap input.good { border-color: var(--accent); }
+.ind-wrap input.bad { border-color: #b3261e; }
+.ind { position: absolute; right: 10px; top: 0; bottom: 0; display: flex; align-items: center; }
+.ind-ok { color: var(--accent); }
+.ind-ok path { stroke-dasharray: 20; stroke-dashoffset: 20; animation: draw .35s ease-out forwards; }
+.ind-x { color: #b3261e; animation: shake .35s ease-out; }
+.ind-x path { stroke-dasharray: 15; stroke-dashoffset: 15; animation: draw .25s ease-out forwards; }
+.spin { width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent); animation: spin .7s linear infinite; }
+.ind-msg { min-height: 18px; font-size: 12px; animation: fade-up .2s ease-out; }
+.ind-msg.available { color: var(--accent); }
+.ind-msg.taken, .ind-msg.invalid { color: #b3261e; }
+.ind-msg.checking, .ind-msg.error { color: var(--muted); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 .tl > .small { margin: 0 0 16px; }
 .tl-head, .tl-row, .tl-add { display: flex; align-items: center; gap: 8px; }
 .tl-head { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--line); }

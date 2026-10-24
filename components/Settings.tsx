@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { UsernameField, blocksSubmit, useUsernameCheck } from "./UsernameField";
 
 function useAction() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -30,6 +31,7 @@ export function Settings() {
   const [pw, setPw] = useState({ current: "", next: "" });
   const [del, setDel] = useState("");
   const profile = useAction();
+  const uState = useUsernameCheck(p.username, user?.username);
   const password = useAction();
   const danger = useAction();
 
@@ -52,10 +54,12 @@ export function Settings() {
             );
           }}
         >
-          <label>
-            Username
-            <input value={p.username} onChange={(e) => setP({ ...p, username: e.target.value })} required />
-          </label>
+          <UsernameField
+            label="Username"
+            value={p.username}
+            onChange={(v) => setP({ ...p, username: v })}
+            state={uState}
+          />
           <label>
             Name
             <input value={p.display_name} onChange={(e) => setP({ ...p, display_name: e.target.value })} />
@@ -65,7 +69,7 @@ export function Settings() {
             <input type="email" value={p.email} onChange={(e) => setP({ ...p, email: e.target.value })} />
           </label>
           <Msg m={profile.msg} />
-          <button className="btn primary" type="submit">Save</button>
+          <button className="btn primary" type="submit" disabled={blocksSubmit(uState)}>Save</button>
         </form>
       </section>
 

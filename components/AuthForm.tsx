@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { UsernameField, blocksSubmit, useUsernameCheck } from "./UsernameField";
 
 export function AuthForm() {
   const { signIn, signUp } = useAuth();
@@ -9,6 +10,7 @@ export function AuthForm() {
   const [f, setF] = useState({ username: "", password: "", email: "", display_name: "" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const uState = useUsernameCheck(mode === "up" ? f.username : "");
 
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setF((p) => ({ ...p, [k]: e.target.value }));
@@ -36,13 +38,23 @@ export function AuthForm() {
   return (
     <div className="auth-wrap">
       <form className="auth fade" onSubmit={submit}>
-        <div className="brand">Ledger</div>
+        <div className="brand">OverJoy</div>
         <h1>{mode === "in" ? "Sign in" : "Create account"}</h1>
 
-        <label>
-          {mode === "in" ? "Username or email" : "Username"}
-          <input value={f.username} onChange={set("username")} autoComplete="username" autoFocus required />
-        </label>
+        {mode === "in" ? (
+          <label>
+            Username or email
+            <input value={f.username} onChange={set("username")} autoComplete="username" autoFocus required />
+          </label>
+        ) : (
+          <UsernameField
+            label="Username"
+            value={f.username}
+            onChange={(v) => setF((p) => ({ ...p, username: v }))}
+            state={uState}
+            autoFocus
+          />
+        )}
         {mode === "up" && (
           <>
             <label>
@@ -68,7 +80,7 @@ export function AuthForm() {
         </label>
 
         {error && <p className="err">{error}</p>}
-        <button className="btn primary wide" type="submit" disabled={busy}>
+        <button className="btn primary wide" type="submit" disabled={busy || (mode === "up" && blocksSubmit(uState))}>
           {mode === "in" ? "Sign in" : "Sign up"}
         </button>
         <button

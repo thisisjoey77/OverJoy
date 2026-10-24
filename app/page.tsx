@@ -62,7 +62,7 @@ function App() {
   return (
     <div className="shell">
       <header className="top">
-        <div className="brand">Ledger</div>
+        <div className="brand">OverJoy</div>
         <nav className="tabs">
           {VIEWS.map((v) => (
             <button
