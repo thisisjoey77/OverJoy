@@ -42,6 +42,10 @@ input[type="color"] { padding: 2px; width: 44px; cursor: pointer; }
 }
 .brand { font-weight: 600; letter-spacing: -0.01em; }
 .tabs { display: flex; gap: 4px; }
+a.tab, a.btn, a.brand { text-decoration: none; }
+a.tab { display: inline-block; }
+a.btn { display: inline-flex; align-items: center; color: inherit; }
+a.brand { color: inherit; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
 
 .profile { position: relative; margin-left: auto; }

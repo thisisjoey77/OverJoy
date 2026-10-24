@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { fullName, initials } from "@/lib/user";
 
-export function ProfileMenu({ onSettings }: { onSettings: () => void }) {
+export function ProfileMenu() {
+  const router = useRouter();
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -51,7 +53,7 @@ export function ProfileMenu({ onSettings }: { onSettings: () => void }) {
             className="pmenu-item"
             onClick={() => {
               setOpen(false);
-              onSettings();
+              router.push("/settings");
             }}
           >
             Settings
