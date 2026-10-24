@@ -59,7 +59,7 @@ type Ctx = {
   removeEntry: (id: string) => void;
   addTag: (kind: Kind, name: string) => void;
   updateTag: (kind: Kind, id: string, patch: Partial<Tag>) => void;
-  removeTag: (kind: Kind, id: string) => void;
+  removeTag: (kind: Kind, id: string, replacementId?: string) => void;
 };
 
 const LedgerContext = createContext<Ctx | null>(null);
@@ -111,11 +111,13 @@ export function LedgerProvider({ children, userId }: { children: ReactNode; user
           ...d,
           [kind]: d[kind].map((t) => (t.id === id ? { ...t, ...patch } : t)),
         })),
-      removeTag: (kind, id) =>
+      removeTag: (kind, id, replacementId = "") =>
         setData((d) => ({
           ...d,
           [kind]: d[kind].filter((t) => t.id !== id),
-          entries: d.entries.map((e) => (e[kind] === id ? { ...e, [kind]: "" } : e)),
+          entries: d.entries.map((e) =>
+            e[kind] === id ? { ...e, [kind]: replacementId } : e,
+          ),
         })),
     }),
     [data, ready, tag],

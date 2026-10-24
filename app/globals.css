@@ -213,13 +213,21 @@ label input { color: var(--text); font-size: 14px; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 .tl > .small { margin: 0 0 16px; }
 .tl { min-width: 0; }
+.tl-title { display: flex; align-items: center; justify-content: space-between; min-height: 28px; }
+.icon-btn {
+  width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; background: transparent; color: var(--muted);
+}
+.icon-btn:hover, .icon-btn.active { background: var(--hover); color: var(--text); border-color: var(--line); }
 .tl-head, .tl-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 48px 88px 110px 64px;
+  grid-template-columns: minmax(0, 1fr) 48px 88px 110px 0fr;
   align-items: center;
   gap: 8px;
   min-width: 0;
+  transition: grid-template-columns .22s ease;
 }
+.tl.editing .tl-head, .tl.editing .tl-row { grid-template-columns: minmax(0, 1fr) 48px 88px 110px 64px; }
 .tl-head { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row { padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row:hover { background: var(--soft); }
@@ -228,7 +236,24 @@ label input { color: var(--text); font-size: 14px; }
 .tl-add { padding-top: 16px; }
 .col { width: 44px; }
 .col-preview { width: 110px; }
-.col-x { width: 64px; text-align: right; }
+.col-x { width: 0; overflow: hidden; text-align: right; }
+.tl.editing .col-x { width: 64px; }
+.remove-tag { opacity: 0; transform: translateX(6px); transition: opacity .18s ease, transform .18s ease; white-space: nowrap; }
+.tl.editing .remove-tag { opacity: 1; transform: translateX(0); }
+.tl:not(.editing) .remove-tag { pointer-events: none; }
+.tag-dialog-backdrop {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center;
+  padding: 20px; background: rgba(0, 0, 0, .28); animation: fade-up .15s ease-out;
+}
+.tag-dialog {
+  width: min(100%, 400px); padding: 24px; background: var(--bg); border: 1px solid var(--line);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .16); animation: drop .18s ease-out;
+}
+.tag-dialog h2 { margin-bottom: 12px; color: var(--text); text-transform: none; letter-spacing: 0; font-size: 18px; }
+.tag-dialog p { margin: 0 0 18px; }
+.tag-dialog label { gap: 7px; }
+.tag-dialog select { width: 100%; }
+.tag-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
 
 @media (max-width: 600px) {
   .tags-page { gap: 36px; }
