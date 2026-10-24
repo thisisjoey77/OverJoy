@@ -142,7 +142,7 @@ a.brand { color: inherit; }
 .bar-track { height: 3px; background: var(--line); }
 .bar-fill { height: 100%; background: var(--accent); }
 
-.tags-page { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.tags-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; }
 @media (max-width: 1000px) { .tags-page { grid-template-columns: 1fr; } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes drop { from { opacity: 0; transform: translateY(-6px) scaleY(0.96); } to { opacity: 1; transform: none; } }
@@ -212,12 +212,31 @@ label input { color: var(--text); font-size: 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 .tl > .small { margin: 0 0 16px; }
-.tl-head, .tl-row, .tl-add { display: flex; align-items: center; gap: 8px; }
+.tl { min-width: 0; }
+.tl-head, .tl-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px 88px 110px 64px;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
 .tl-head { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row { padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row:hover { background: var(--soft); }
+.tl-row input.grow { width: 100%; }
+.tl-row .col { justify-self: start; }
 .tl-add { padding-top: 16px; }
 .col { width: 44px; }
-.tl-head .col:nth-of-type(3) { width: 44px; }
 .col-preview { width: 110px; }
 .col-x { width: 64px; text-align: right; }
+
+@media (max-width: 600px) {
+  .tags-page { gap: 36px; }
+  .tl-head, .tl-row { grid-template-columns: minmax(0, 1fr) 36px 36px minmax(56px, max-content) 48px; gap: 5px; }
+  .tl-head .col { overflow: visible; }
+  .tl-head .col:nth-of-type(3) { font-size: 0; }
+  .tl-head .col:nth-of-type(3)::after { content: "BG"; font-size: 12px; }
+  .tl-row .col { width: 34px; }
+  .tl-row .col-preview { width: auto; }
+  .tl-row .col-x { width: 48px; padding: 2px; }
+}
