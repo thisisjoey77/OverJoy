@@ -10,6 +10,7 @@ type Profile = { username?: string; email?: string | null; first_name?: string |
 type Ctx = {
   ready: boolean;
   user: User | null;
+  token: string | null;
   signIn: (username: string, password: string) => Promise<void>;
   signUp: (b: { username: string; password: string; email?: string; first_name?: string; last_name?: string }) => Promise<void>;
   signOut: () => void;
@@ -60,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       ready,
       user,
+      token,
       signIn: async (username, password) =>
         start(await api("/auth/signin", { body: { username, password } })),
       signUp: async (b) => start(await api("/auth/signup", { body: b })),

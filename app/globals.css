@@ -189,6 +189,12 @@ label input { color: var(--text); font-size: 14px; }
 .err { margin: 0; color: #b3261e; font-size: 13px; }
 .ok { margin: 0; color: var(--accent); font-size: 13px; }
 .page.narrow { max-width: 480px; }
+.storage-error { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.storage-warning {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  padding: 8px 16px; background: #fff4e5; border-bottom: 1px solid #ead3b2;
+  color: #6b4a1e; font-size: 13px;
+}
 .settings { display: flex; flex-direction: column; gap: 40px; }
 .settings h2 { margin-bottom: 12px; }
 .stack { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }

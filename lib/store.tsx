@@ -50,6 +50,10 @@ const seed = (): Data => {
 
 type Ctx = {
   ready: boolean;
+  loadError: string | null;
+  saveError: string | null;
+  retryLoad: () => void;
+  retrySave: () => void;
   general: Tag[];
   specific: Tag[];
   entries: Entry[];
@@ -64,21 +68,50 @@ type Ctx = {
 
 const LedgerContext = createContext<Ctx | null>(null);
 
-export function LedgerProvider({ children, userId }: { children: ReactNode; userId: string }) {
+export function LedgerProvider({ children, userId, token }: { children: ReactNode; userId: string; token: string }) {
   const [data, setData] = useState<Data>({ general: [], specific: [], entries: [] });
   const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [saveAttempt, setSaveAttempt] = useState(0);
 
   useEffect(() => {
+    let active = true;
+    setReady(false);
+    setLoadError(null);
     repository
-      .load(userId)
+      .load(userId, token)
       .then((d) => setData(d ?? seed()))
-      .catch(() => setData(seed()))
-      .finally(() => setReady(true));
-  }, [userId]);
+      .catch((error: unknown) => {
+        if (active) setLoadError(error instanceof Error ? error.message : "Could not load calendar data");
+      })
+      .finally(() => {
+        if (active) setReady(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [userId, token, loadAttempt]);
 
   useEffect(() => {
-    if (ready) void repository.save(userId, data);
-  }, [data, ready, userId]);
+    if (!ready || loadError) return;
+    let active = true;
+    const timeout = setTimeout(() => {
+      repository
+        .save(userId, token, data)
+        .then(() => {
+          if (active) setSaveError(null);
+        })
+        .catch((error: unknown) => {
+          if (active) setSaveError(error instanceof Error ? error.message : "Could not save calendar data");
+        });
+    }, 350);
+    return () => {
+      active = false;
+      clearTimeout(timeout);
+    };
+  }, [data, ready, userId, token, loadError, saveAttempt]);
 
   const tag = useCallback(
     (kind: Kind, id: string) => data[kind].find((t) => t.id === id),
@@ -88,6 +121,10 @@ export function LedgerProvider({ children, userId }: { children: ReactNode; user
   const value = useMemo<Ctx>(
     () => ({
       ready,
+      loadError,
+      saveError,
+      retryLoad: () => setLoadAttempt((n) => n + 1),
+      retrySave: () => setSaveAttempt((n) => n + 1),
       general: data.general,
       specific: data.specific,
       entries: data.entries,
