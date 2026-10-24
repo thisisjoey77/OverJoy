@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLedger, type Entry } from "@/lib/store";
 import { money } from "@/lib/date";
 import { Chip } from "./Chip";
+import { TagSelect } from "./TagSelect";
 
 type Values = Omit<Entry, "id">;
 
@@ -30,9 +31,7 @@ export function EntryForm({
     if (!initial && defaultDate) setV((p) => ({ ...p, date: defaultDate }));
   }, [defaultDate, initial]);
 
-  const set = (k: keyof typeof v) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => setV((p) => ({ ...p, [k]: e.target.value }));
+  const set = (k: keyof typeof v) => (e: React.ChangeEvent<HTMLInputElement>) => setV((p) => ({ ...p, [k]: e.target.value }));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,18 +64,20 @@ export function EntryForm({
         autoFocus={!initial}
         required
       />
-      <select value={v.general} onChange={set("general")} aria-label="General tag">
-        <option value="">General</option>
-        {general.map((t) => (
-          <option key={t.id} value={t.id}>{t.name}</option>
-        ))}
-      </select>
-      <select value={v.specific} onChange={set("specific")} aria-label="Specific tag">
-        <option value="">Specific</option>
-        {specific.map((t) => (
-          <option key={t.id} value={t.id}>{t.name}</option>
-        ))}
-      </select>
+      <TagSelect
+        value={v.general}
+        onChange={(id) => setV((p) => ({ ...p, general: id }))}
+        tags={general}
+        placeholder="General"
+        label="General tag"
+      />
+      <TagSelect
+        value={v.specific}
+        onChange={(id) => setV((p) => ({ ...p, specific: id }))}
+        tags={specific}
+        placeholder="Specific"
+        label="Specific tag"
+      />
       <input
         className="note"
         placeholder="Note (optional)"

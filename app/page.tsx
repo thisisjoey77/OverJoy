@@ -91,7 +91,7 @@ function App() {
           <EntryForm defaultDate={cursor} />
 
           <div className="cols">
-            <section className="main">
+            <section className="main fade" key={view + (view === "month" ? "" : cursor)}>
               {view === "day" && <DayList date={cursor} />}
               {view === "week" && <WeekView start={startOfWeek(cur)} onOpen={openDay} />}
               {view === "month" && <MonthView cursor={cur} onOpen={openDay} />}
