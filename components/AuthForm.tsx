@@ -39,7 +39,7 @@ export function AuthForm() {
   return (
     <div className="auth-wrap">
       <form className="auth fade" onSubmit={submit}>
-        <div className="brand">OverJoy</div>
+        <div className="brand">DayQuid</div>
         <h1>{mode === "in" ? "Sign in" : "Create account"}</h1>
 
         {mode === "in" ? (

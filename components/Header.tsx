@@ -25,7 +25,7 @@ export function Header() {
 
   return (
     <header className="top">
-      <Link href="/" className="brand">OverJoy</Link>
+      <Link href="/" className="brand">DayQuid</Link>
       <nav className="tabs">
         {VIEWS.map((v) => (
           <Link

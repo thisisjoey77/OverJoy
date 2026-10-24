@@ -6,7 +6,7 @@ import { Shell } from "@/components/Shell";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "OverJoy",
+  title: "DayQuid",
   description: "Daily spending tracker",
 };
 
