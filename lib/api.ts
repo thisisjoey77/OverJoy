@@ -4,7 +4,8 @@ export type User = {
   id: number;
   username: string;
   email: string | null;
-  display_name: string | null;
+  first_name: string | null;
+  last_name: string | null;
   created_at: string;
 };
 

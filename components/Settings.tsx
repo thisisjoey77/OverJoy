@@ -25,7 +25,8 @@ export function Settings() {
   const { user, updateProfile, changePassword, deleteAccount, signOut } = useAuth();
   const [p, setP] = useState({
     username: user?.username ?? "",
-    display_name: user?.display_name ?? "",
+    first_name: user?.first_name ?? "",
+    last_name: user?.last_name ?? "",
     email: user?.email ?? "",
   });
   const [pw, setPw] = useState({ current: "", next: "" });
@@ -47,7 +48,8 @@ export function Settings() {
               () =>
                 updateProfile({
                   username: p.username,
-                  display_name: p.display_name || null,
+                  first_name: p.first_name || null,
+                  last_name: p.last_name || null,
                   email: p.email || null,
                 }),
               "Saved",
@@ -60,10 +62,16 @@ export function Settings() {
             onChange={(v) => setP({ ...p, username: v })}
             state={uState}
           />
-          <label>
-            Name
-            <input value={p.display_name} onChange={(e) => setP({ ...p, display_name: e.target.value })} />
-          </label>
+          <div className="row2">
+            <label>
+              First name
+              <input value={p.first_name} onChange={(e) => setP({ ...p, first_name: e.target.value })} autoComplete="given-name" />
+            </label>
+            <label>
+              Last name
+              <input value={p.last_name} onChange={(e) => setP({ ...p, last_name: e.target.value })} autoComplete="family-name" />
+            </label>
+          </div>
           <label>
             Email
             <input type="email" value={p.email} onChange={(e) => setP({ ...p, email: e.target.value })} />

@@ -5,13 +5,13 @@ import { api, type User } from "./api";
 
 const TOKEN_KEY = "account-site:token";
 
-type Profile = { username?: string; email?: string | null; display_name?: string | null };
+type Profile = { username?: string; email?: string | null; first_name?: string | null; last_name?: string | null };
 
 type Ctx = {
   ready: boolean;
   user: User | null;
   signIn: (username: string, password: string) => Promise<void>;
-  signUp: (b: { username: string; password: string; email?: string; display_name?: string }) => Promise<void>;
+  signUp: (b: { username: string; password: string; email?: string; first_name?: string; last_name?: string }) => Promise<void>;
   signOut: () => void;
   updateProfile: (p: Profile) => Promise<void>;
   changePassword: (current: string, next: string) => Promise<void>;

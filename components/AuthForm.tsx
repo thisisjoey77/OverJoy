@@ -7,7 +7,7 @@ import { UsernameField, blocksSubmit, useUsernameCheck } from "./UsernameField";
 export function AuthForm() {
   const { signIn, signUp } = useAuth();
   const [mode, setMode] = useState<"in" | "up">("in");
-  const [f, setF] = useState({ username: "", password: "", email: "", display_name: "" });
+  const [f, setF] = useState({ username: "", password: "", email: "", first_name: "", last_name: "" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const uState = useUsernameCheck(mode === "up" ? f.username : "");
@@ -26,7 +26,8 @@ export function AuthForm() {
           username: f.username,
           password: f.password,
           email: f.email || undefined,
-          display_name: f.display_name || undefined,
+          first_name: f.first_name || undefined,
+          last_name: f.last_name || undefined,
         });
     } catch (err) {
       setError((err as Error).message);
@@ -57,10 +58,16 @@ export function AuthForm() {
         )}
         {mode === "up" && (
           <>
-            <label>
-              Name <span className="muted">(optional)</span>
-              <input value={f.display_name} onChange={set("display_name")} autoComplete="name" />
-            </label>
+            <div className="row2">
+              <label>
+                First name <span className="muted">(optional)</span>
+                <input value={f.first_name} onChange={set("first_name")} autoComplete="given-name" />
+              </label>
+              <label>
+                Last name <span className="muted">(optional)</span>
+                <input value={f.last_name} onChange={set("last_name")} autoComplete="family-name" />
+              </label>
+            </div>
             <label>
               Email <span className="muted">(optional)</span>
               <input type="email" value={f.email} onChange={set("email")} autoComplete="email" />

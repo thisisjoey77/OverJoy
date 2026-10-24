@@ -12,6 +12,7 @@ import { TagManager } from "@/components/TagManager";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { AuthForm } from "@/components/AuthForm";
 import { Settings } from "@/components/Settings";
+import { ProfileMenu } from "@/components/ProfileMenu";
 
 type View = "day" | "week" | "month" | "tags" | "settings";
 const VIEWS: { id: View; label: string }[] = [
@@ -19,7 +20,6 @@ const VIEWS: { id: View; label: string }[] = [
   { id: "week", label: "Week" },
   { id: "month", label: "Month" },
   { id: "tags", label: "Tags" },
-  { id: "settings", label: "Settings" },
 ];
 
 function App() {
@@ -74,6 +74,7 @@ function App() {
             </button>
           ))}
         </nav>
+        <ProfileMenu onSettings={() => setView("settings")} />
       </header>
 
       {view === "settings" ? (
