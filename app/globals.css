@@ -221,13 +221,11 @@ label input { color: var(--text); font-size: 14px; }
 .icon-btn:hover, .icon-btn.active { background: var(--hover); color: var(--text); border-color: var(--line); }
 .tl-head, .tl-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 48px 88px 110px 0fr;
+  grid-template-columns: minmax(0, 1fr) 48px 88px 110px 64px;
   align-items: center;
   gap: 8px;
   min-width: 0;
-  transition: grid-template-columns .32s cubic-bezier(.22, 1, .36, 1);
 }
-.tl.editing .tl-head, .tl.editing .tl-row { grid-template-columns: minmax(0, 1fr) 48px 88px 110px 64px; }
 .tl-head { font-size: 12px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row { padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-row:hover { background: var(--soft); }
@@ -236,11 +234,13 @@ label input { color: var(--text); font-size: 14px; }
 .tl-add { padding-top: 16px; }
 .col { width: 44px; }
 .col-preview { width: 110px; }
-.col-x { width: 0; overflow: hidden; text-align: right; }
-.tl.editing .col-x { width: 64px; }
-.tl-row > :not(.col-x) { transition: transform .32s cubic-bezier(.22, 1, .36, 1); }
-.tl.editing .tl-row > :not(.col-x) { transform: translateX(-6px); }
-.remove-tag { opacity: 0; transform: translateX(14px); transition: opacity .24s cubic-bezier(.22, 1, .36, 1), transform .32s cubic-bezier(.22, 1, .36, 1); white-space: nowrap; }
+.col-x { width: 64px; overflow: hidden; text-align: right; }
+.remove-tag {
+  width: 64px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateX(100%);
+  transition: opacity .22s cubic-bezier(.22, 1, .36, 1), transform .36s cubic-bezier(.22, 1, .36, 1);
+  white-space: nowrap;
+}
 .tl.editing .remove-tag { opacity: 1; transform: translateX(0); }
 .tl:not(.editing) .remove-tag { pointer-events: none; }
 .tag-dialog-backdrop {
@@ -265,9 +265,9 @@ label input { color: var(--text); font-size: 14px; }
   .tl-head .col:nth-of-type(3)::after { content: "BG"; font-size: 12px; }
   .tl-row .col { width: 34px; }
   .tl-row .col-preview { width: auto; }
-  .tl-row .col-x { width: 48px; padding: 2px; }
+  .tl-row .col-x, .tl-row .remove-tag { width: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tl-head, .tl-row, .tl-row > :not(.col-x), .remove-tag { transition: none; }
+  .remove-tag { transition: none; }
 }
