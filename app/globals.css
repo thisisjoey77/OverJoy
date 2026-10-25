@@ -138,13 +138,14 @@ a.brand { color: inherit; }
 .dnum { font-size: 12px; padding: 1px 5px; }
 .dnum.today { background: var(--accent); color: #fff; }
 .dsum { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.mini { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 11px; }
+.mini { display: flex; justify-content: space-between; align-items: center; gap: 6px; width: 100%; max-width: 100%; min-width: 0; overflow: hidden; font-size: 11px; }
 .mini-amt { font-variant-numeric: tabular-nums; }
-.mini-tags { display: inline-flex; align-items: center; gap: 3px; min-width: 0; }
+.mini-tags { display: inline-flex; align-items: center; gap: 3px; max-width: 64%; min-width: 0; overflow: hidden; }
 .mini-tags .chip { font-size: 10px; padding: 0 6px; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
-.compact-mini { justify-content: space-between; width: 100%; min-width: 0; }
-.mini-mark { flex: none; overflow: visible; transform-origin: center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
-.integrated-tag { flex: none; width: 128px; height: 24px; margin-left: auto; overflow: visible; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.compact-mini { justify-content: flex-start; width: 100%; max-width: 100%; min-width: 0; overflow: hidden; gap: 4px; }
+.compact-mini > .mini-amt { flex: 0 1 auto; min-width: 0; max-width: 56%; overflow: hidden; white-space: nowrap; }
+.mini-mark { flex: 0 1 42px; width: 42px; min-width: 20px; max-width: calc(100% - 46px); height: 20px; margin-left: auto; overflow: hidden; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.integrated-tag { flex: 1 1 128px; width: 128px; min-width: 20px; max-width: calc(100% - 46px); height: 24px; margin-left: auto; overflow: hidden; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
 .integrated-tag-text { font-size: 9px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mini-tags { animation: tag-pop .28s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes tag-pop { from { opacity: 0; transform: translateY(3px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }

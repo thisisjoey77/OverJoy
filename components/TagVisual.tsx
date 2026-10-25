@@ -26,7 +26,7 @@ export function TagVisual({
     const primaryFill = first?.bg ?? "#ececea";
     const primaryColor = first?.color ?? "#111111";
     return (
-      <svg className="integrated-tag" width="128" height="24" viewBox="0 0 128 24" role="img">
+      <svg className="integrated-tag" width="128" height="24" viewBox="0 0 128 24" preserveAspectRatio="none" role="img">
         <path d="M1 2H127V22H1Z" fill={primaryFill} />
         {general && specific && (
           <path d="M96 2H127V22H96L78 12Z" fill={specific.bg} />
