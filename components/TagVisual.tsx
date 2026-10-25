@@ -31,7 +31,7 @@ export function TagVisual({
       <svg className="integrated-tag" width="128" height="24" viewBox="0 0 128 24" preserveAspectRatio="none" role="img">
         <path d="M1 2H127V22H1Z" fill={primaryFill} />
         {general && specific && (
-          <path d="M96 2H127V22H96L78 12Z" fill={specific.bg} />
+          <path d="M107 2H127V22H107L93 12Z" fill={specific.bg} />
         )}
         <path
           d="M1 2H127V22H1Z"
@@ -43,7 +43,7 @@ export function TagVisual({
         />
         {general && specific && (
           <path
-            d="M96 2 78 12 96 22"
+            d="M107 2 93 12 107 22"
             fill="none"
             stroke={outline(specific.bg, specific.color)}
             strokeWidth="1.4"
@@ -51,7 +51,7 @@ export function TagVisual({
             vectorEffect="non-scaling-stroke"
           />
         )}
-        <text x="38" y="16" textAnchor="middle" fill={primaryColor} className="integrated-tag-text">
+        <text x="50" y="16" textAnchor="middle" fill={primaryColor} className="integrated-tag-text">
           {amount}
         </text>
       </svg>
