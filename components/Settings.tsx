@@ -14,11 +14,11 @@ function AppearancePreview({ appearance }: { appearance: TagAppearance }) {
     <div className="appearance-day" aria-label="Example day with two expenditures">
       <div className="appearance-day-head"><span>Tue 24</span><span>$18.50</span></div>
       <div className="appearance-entry">
-        {appearance === "markers" && <span className="mini-amt">$12.50</span>}
+        {appearance !== "amount" && <span className="mini-amt">$12.50</span>}
         <TagVisual general={sampleGeneral} specific={sampleSpecific} amount="$12.50" appearance={appearance} />
       </div>
       <div className="appearance-entry">
-        {appearance === "markers" && <span className="mini-amt">$6.00</span>}
+        {appearance !== "amount" && <span className="mini-amt">$6.00</span>}
         <TagVisual general={sampleGeneral} amount="$6.00" appearance={appearance} />
       </div>
     </div>
@@ -85,6 +85,17 @@ export function Settings() {
             <span className="appearance-choice-title">Amount inside tag</span>
             <span className="muted small">Combine the amount and tag shape.</span>
             <AppearancePreview appearance="amount" />
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={appearance === "squares"}
+            className={"appearance-choice" + (appearance === "squares" ? " selected" : "")}
+            onClick={() => setAppearance("squares")}
+          >
+            <span className="appearance-choice-title">Squares</span>
+            <span className="muted small">Keep the amount left of adjacent tag colors.</span>
+            <AppearancePreview appearance="squares" />
           </button>
         </div>
       </section>

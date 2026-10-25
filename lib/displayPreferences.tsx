@@ -19,7 +19,8 @@ export function DisplayPreferences({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setCompact(localStorage.getItem(KEY) === "true");
-    setAppearance(localStorage.getItem(APPEARANCE_KEY) === "amount" ? "amount" : "markers");
+    const savedAppearance = localStorage.getItem(APPEARANCE_KEY);
+    setAppearance(savedAppearance === "amount" || savedAppearance === "squares" ? savedAppearance : "markers");
     setReady(true);
   }, []);
 

@@ -26,7 +26,7 @@ function Mini({ e, compact, appearance }: { e: Entry; compact: boolean; appearan
   if (compact) {
     return (
       <div className="mini compact-mini" title={label} aria-label={`${money(e.amount)}; ${label}`}>
-        {appearance === "markers" && <span className="mini-amt">{money(e.amount)}</span>}
+        {appearance !== "amount" && <span className="mini-amt">{money(e.amount)}</span>}
         <TagVisual general={general} specific={specific} amount={money(e.amount)} appearance={appearance} />
       </div>
     );
