@@ -23,32 +23,62 @@ function Mini({ e, compact }: { e: Entry; compact: boolean }) {
   const label = labels.join(" + ") || "Other";
 
   if (compact) {
-    const singlePath = (direction: "left" | "right") =>
-      direction === "left"
-        ? "M1 10 8 2h26l-7 8 7 8H8z"
-        : "M1 2h26l7 8-7 8H1l7-8z";
+    const outline = (background: string, color: string) =>
+      background.toLowerCase() === "#ffffff" || color.toLowerCase() === "#ffffff"
+        ? "#000000"
+        : color;
+    const strokeWidth = 1.4;
     return (
       <div className="mini compact-mini" title={label} aria-label={`${money(e.amount)}; ${label}`}>
         <span className="mini-amt">{money(e.amount)}</span>
         <svg
           className="mini-mark"
-          width={general && specific ? 42 : 34}
+          width="42"
           height="20"
           viewBox="0 0 42 20"
           role="img"
           aria-label={label}
+          shapeRendering="geometricPrecision"
         >
           {general && specific ? (
             <>
-              <path d="M1 10 8 2h26l-7 8 7 8H8z" fill={general.bg} stroke={general.color} strokeWidth="1.5" />
-              <path d="M10 2h24l7 8-7 8H10l7-8z" fill={specific.bg} stroke={specific.color} strokeWidth="1.5" />
+              <path
+                d="M1 10 9 2h15l-6 8 6 8H9z"
+                fill={general.bg}
+                stroke={outline(general.bg, general.color)}
+                strokeWidth={strokeWidth}
+                strokeLinejoin="miter"
+                vectorEffect="non-scaling-stroke"
+              />
+              <path
+                d="M18 10 24 2h17v16H24z"
+                fill={specific.bg}
+                stroke={outline(specific.bg, specific.color)}
+                strokeWidth={strokeWidth}
+                strokeLinejoin="miter"
+                vectorEffect="non-scaling-stroke"
+              />
             </>
           ) : general ? (
-            <path d={singlePath("left")} fill={general.bg} stroke={general.color} strokeWidth="1.5" />
+            <path
+              d="M1 10 9 2h25l-7 8 7 8H9z"
+              fill={general.bg}
+              stroke={outline(general.bg, general.color)}
+              strokeWidth={strokeWidth}
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
           ) : specific ? (
-            <path d={singlePath("right")} fill={specific.bg} stroke={specific.color} strokeWidth="1.5" />
+            <path
+              d="M1 10 9 2h32v16H9z"
+              fill={specific.bg}
+              stroke={outline(specific.bg, specific.color)}
+              strokeWidth={strokeWidth}
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
           ) : (
-            <path d="M1 2h32v16H1z" fill="#ececea" stroke="#787774" strokeWidth="1.5" />
+            <path d="M1 10 9 2h32v16H9z" fill="#ececea" stroke="#787774" strokeWidth={strokeWidth} />
           )}
         </svg>
       </div>
