@@ -43,6 +43,15 @@ export function TagVisual({
         />
         {general && specific && (
           <path
+            d="M127 2V26"
+            fill="none"
+            stroke={outline(specific.bg, specific.color)}
+            strokeWidth="1.4"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+        {general && specific && (
+          <path
             d="M107 2 93 14 107 26"
             fill="none"
             stroke={outline(specific.bg, specific.color)}
