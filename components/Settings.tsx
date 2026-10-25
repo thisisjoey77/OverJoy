@@ -3,6 +3,27 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { UsernameField, blocksSubmit, useUsernameCheck } from "./UsernameField";
+import { useDisplayPreferences } from "@/lib/displayPreferences";
+import { TagVisual, type TagAppearance } from "./TagVisual";
+
+const sampleGeneral = { id: "preview-food", name: "Food", color: "#5c4a1a", bg: "#fbeab8" };
+const sampleSpecific = { id: "preview-cafe", name: "Cafe", color: "#ffffff", bg: "#2f5a4e" };
+
+function AppearancePreview({ appearance }: { appearance: TagAppearance }) {
+  return (
+    <div className="appearance-day" aria-label="Example day with two expenditures">
+      <div className="appearance-day-head"><span>Tue 24</span><span>$18.50</span></div>
+      <div className="appearance-entry">
+        {appearance === "markers" && <span className="mini-amt">$12.50</span>}
+        <TagVisual general={sampleGeneral} specific={sampleSpecific} amount="$12.50" appearance={appearance} />
+      </div>
+      <div className="appearance-entry">
+        {appearance === "markers" && <span className="mini-amt">$6.00</span>}
+        <TagVisual general={sampleGeneral} amount="$6.00" appearance={appearance} />
+      </div>
+    </div>
+  );
+}
 
 function useAction() {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -23,6 +44,7 @@ const Msg = ({ m }: { m: { ok: boolean; text: string } | null }) =>
 
 export function Settings() {
   const { user, updateProfile, changePassword, deleteAccount, signOut } = useAuth();
+  const { appearance, setAppearance } = useDisplayPreferences();
   const [p, setP] = useState({
     username: user?.username ?? "",
     first_name: user?.first_name ?? "",
@@ -38,6 +60,35 @@ export function Settings() {
 
   return (
     <div className="settings">
+      <section className="fade">
+        <h2>Appearance</h2>
+        <p className="muted small section-intro">Choose how minimized calendar entries are displayed.</p>
+        <div className="appearance-options" role="radiogroup" aria-label="Minimal tag style">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={appearance === "markers"}
+            className={"appearance-choice" + (appearance === "markers" ? " selected" : "")}
+            onClick={() => setAppearance("markers")}
+          >
+            <span className="appearance-choice-title">Minimal markers</span>
+            <span className="muted small">Keep the amount separate from the tags.</span>
+            <AppearancePreview appearance="markers" />
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={appearance === "amount"}
+            className={"appearance-choice" + (appearance === "amount" ? " selected" : "")}
+            onClick={() => setAppearance("amount")}
+          >
+            <span className="appearance-choice-title">Amount inside tag</span>
+            <span className="muted small">Combine the amount and tag shape.</span>
+            <AppearancePreview appearance="amount" />
+          </button>
+        </div>
+      </section>
+
       <section className="fade">
         <h2>Profile</h2>
         <form

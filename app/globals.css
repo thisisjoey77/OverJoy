@@ -142,8 +142,10 @@ a.brand { color: inherit; }
 .mini-amt { font-variant-numeric: tabular-nums; }
 .mini-tags { display: inline-flex; align-items: center; gap: 3px; min-width: 0; }
 .mini-tags .chip { font-size: 10px; padding: 0 6px; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
-.compact-mini { justify-content: flex-start; }
+.compact-mini { justify-content: space-between; width: 100%; min-width: 0; }
 .mini-mark { flex: none; overflow: visible; transform-origin: center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.integrated-tag { flex: none; width: 96px; height: 24px; margin-left: auto; overflow: visible; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.integrated-tag-text { font-size: 9px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mini-tags { animation: tag-pop .28s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes tag-pop { from { opacity: 0; transform: translateY(3px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .more { font-size: 11px; color: var(--muted); }
@@ -213,6 +215,19 @@ label input { color: var(--text); font-size: 14px; }
 .settings h2 { margin-bottom: 12px; }
 .stack { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
 .stack label { width: 100%; }
+.settings .section-intro { margin: -6px 0 14px; }
+.appearance-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.appearance-choice {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0;
+  padding: 14px; background: var(--bg); border: 1px solid var(--line); text-align: left;
+}
+.appearance-choice:hover { background: var(--soft); }
+.appearance-choice.selected { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.appearance-choice-title { font-size: 14px; font-weight: 600; }
+.appearance-day { width: 100%; min-height: 82px; padding: 8px; margin-top: 6px; border: 1px solid var(--line); background: var(--bg); }
+.appearance-day-head { display: flex; justify-content: space-between; padding-bottom: 5px; margin-bottom: 3px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+.appearance-entry { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 25px; }
+@media (max-width: 560px) { .appearance-options { grid-template-columns: 1fr; } }
 
 .ind-wrap { position: relative; display: flex; }
 .ind-wrap input { width: 100%; padding-right: 36px; }

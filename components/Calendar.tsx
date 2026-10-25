@@ -28,7 +28,7 @@ export function CalendarRoute({ view, param }: { view: CalView; param: string })
 
 function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
   const { entries } = useLedger();
-  const { compact, setCompact } = useDisplayPreferences();
+  const { compact, setCompact, appearance } = useDisplayPreferences();
   const router = useRouter();
   const cur = parse(cursor);
 
@@ -94,8 +94,8 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
       <div className="cols">
         <section className="main fade" key={view + cursor}>
           {view === "day" && <DayList date={cursor} />}
-          {view === "week" && <WeekView start={startOfWeek(cur)} onOpen={(d) => router.push(dayPath(d))} compact={compact} />}
-          {view === "month" && <MonthView cursor={cur} onOpen={(d) => router.push(dayPath(d))} compact={compact} />}
+          {view === "week" && <WeekView start={startOfWeek(cur)} onOpen={(d) => router.push(dayPath(d))} compact={compact} appearance={appearance} />}
+          {view === "month" && <MonthView cursor={cur} onOpen={(d) => router.push(dayPath(d))} compact={compact} appearance={appearance} />}
         </section>
         <aside className="side">
           <Summary entries={inRange} total={total} />
