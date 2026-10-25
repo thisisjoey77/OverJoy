@@ -10,12 +10,6 @@ function outline(background: string, textColor: string) {
     : textColor;
 }
 
-function relativeLuminance(hex: string) {
-  const rgb = hex.replace("#", "").match(/.{2}/g)?.map((part) => parseInt(part, 16) / 255) ?? [0, 0, 0];
-  const linear = rgb.map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
-  return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
-}
-
 export function TagVisual({
   general,
   specific,
@@ -28,38 +22,34 @@ export function TagVisual({
   appearance: TagAppearance;
 }) {
   if (appearance === "amount") {
-    const bgId = `tag-gradient-${general?.id ?? "none"}-${specific?.id ?? "none"}`;
     const first = general ?? specific;
-    const white = [general, specific].some(
-      (tag) => tag && (tag.bg.toLowerCase() === "#ffffff" || tag.color.toLowerCase() === "#ffffff"),
-    );
-    const stroke = white ? "#000000" : first?.color ?? "#787774";
-    const combinedFill = general && specific;
-    const averageLuminance = combinedFill
-      ? (relativeLuminance(general.bg) + relativeLuminance(specific.bg)) / 2
-      : relativeLuminance(first?.bg ?? "#ececea");
-    const text = averageLuminance > 0.42 ? "#111111" : "#ffffff";
+    const primaryFill = first?.bg ?? "#ececea";
+    const primaryColor = first?.color ?? "#111111";
     return (
-      <svg className="integrated-tag" width="96" height="24" viewBox="0 0 96 24" role="img">
-        {combinedFill && (
-          <defs>
-            <linearGradient id={bgId} x1="0" x2="1" y1="0" y2="0" gradientUnits="objectBoundingBox">
-              <stop offset="0%" stopColor={general.bg} />
-              <stop offset="50%" stopColor={general.bg} />
-              <stop offset="50%" stopColor={specific.bg} />
-              <stop offset="100%" stopColor={specific.bg} />
-            </linearGradient>
-          </defs>
+      <svg className="integrated-tag" width="128" height="24" viewBox="0 0 128 24" role="img">
+        <path d="M1 2H127V22H1Z" fill={primaryFill} />
+        {general && specific && (
+          <path d="M96 2H127V22H96L78 12Z" fill={specific.bg} />
         )}
         <path
-          d="M1 2H95V7L83 12 95 17V22H1Z"
-          fill={combinedFill ? `url(#${bgId})` : first?.bg ?? "#ececea"}
-          stroke={stroke}
+          d="M1 2H127V22H1Z"
+          fill="none"
+          stroke={outline(primaryFill, primaryColor)}
           strokeWidth="1.4"
           strokeLinejoin="miter"
           vectorEffect="non-scaling-stroke"
         />
-        <text x="48" y="16" textAnchor="middle" fill={text} className="integrated-tag-text">
+        {general && specific && (
+          <path
+            d="M96 2 78 12 96 22"
+            fill="none"
+            stroke={outline(specific.bg, specific.color)}
+            strokeWidth="1.4"
+            strokeLinejoin="miter"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+        <text x="38" y="16" textAnchor="middle" fill={primaryColor} className="integrated-tag-text">
           {amount}
         </text>
       </svg>

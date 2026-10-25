@@ -144,7 +144,7 @@ a.brand { color: inherit; }
 .mini-tags .chip { font-size: 10px; padding: 0 6px; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
 .compact-mini { justify-content: space-between; width: 100%; min-width: 0; }
 .mini-mark { flex: none; overflow: visible; transform-origin: center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
-.integrated-tag { flex: none; width: 96px; height: 24px; margin-left: auto; overflow: visible; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.integrated-tag { flex: none; width: 128px; height: 24px; margin-left: auto; overflow: visible; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
 .integrated-tag-text { font-size: 9px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mini-tags { animation: tag-pop .28s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes tag-pop { from { opacity: 0; transform: translateY(3px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
