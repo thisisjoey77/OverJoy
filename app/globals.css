@@ -145,8 +145,8 @@ a.brand { color: inherit; }
 .compact-mini { justify-content: flex-start; width: 100%; max-width: 100%; min-width: 0; overflow: hidden; gap: 4px; }
 .compact-mini > .mini-amt { flex: 0 1 auto; min-width: 0; max-width: 56%; overflow: hidden; white-space: nowrap; }
 .mini-mark { flex: 0 1 42px; width: 42px; min-width: 20px; max-width: calc(100% - 46px); height: 20px; margin-left: auto; overflow: hidden; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
-.integrated-tag { flex: 1 1 128px; width: 128px; min-width: 20px; max-width: 100%; height: 24px; margin-left: auto; overflow: hidden; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
-.integrated-tag-text { font-size: 9px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.integrated-tag { flex: 1 1 128px; width: 128px; min-width: 20px; max-width: 100%; height: 28px; margin-left: auto; overflow: hidden; transform-origin: right center; animation: tag-pop .34s cubic-bezier(.22, 1, .36, 1) both; }
+.integrated-tag-text { font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .mini-tags { animation: tag-pop .28s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes tag-pop { from { opacity: 0; transform: translateY(3px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .more { font-size: 11px; color: var(--muted); }
