@@ -15,25 +15,67 @@ function useByDate() {
   return map;
 }
 
-function Mini({ e }: { e: Entry }) {
+function Mini({ e, compact }: { e: Entry; compact: boolean }) {
   const { tag } = useLedger();
-  const t = tag("specific", e.specific) ?? tag("general", e.general);
+  const general = tag("general", e.general);
+  const specific = tag("specific", e.specific);
+  const labels = [general?.name, specific?.name].filter(Boolean);
+  const label = labels.join(" + ") || "Other";
+
+  if (compact) {
+    const singlePath = (direction: "left" | "right") =>
+      direction === "left"
+        ? "M1 10 8 2h26l-7 8 7 8H8z"
+        : "M1 2h26l7 8-7 8H1l7-8z";
+    return (
+      <div className="mini compact-mini" title={label} aria-label={`${money(e.amount)}; ${label}`}>
+        <span className="mini-amt">{money(e.amount)}</span>
+        <svg
+          className="mini-mark"
+          width={general && specific ? 42 : 34}
+          height="20"
+          viewBox="0 0 42 20"
+          role="img"
+          aria-label={label}
+        >
+          {general && specific ? (
+            <>
+              <path d="M1 10 8 2h26l-7 8 7 8H8z" fill={general.bg} stroke={general.color} strokeWidth="1.5" />
+              <path d="M10 2h24l7 8-7 8H10l7-8z" fill={specific.bg} stroke={specific.color} strokeWidth="1.5" />
+            </>
+          ) : general ? (
+            <path d={singlePath("left")} fill={general.bg} stroke={general.color} strokeWidth="1.5" />
+          ) : specific ? (
+            <path d={singlePath("right")} fill={specific.bg} stroke={specific.color} strokeWidth="1.5" />
+          ) : (
+            <path d="M1 2h32v16H1z" fill="#ececea" stroke="#787774" strokeWidth="1.5" />
+          )}
+        </svg>
+      </div>
+    );
+  }
+
   return (
     <div className="mini">
       <span className="mini-amt">{money(e.amount)}</span>
-      <Chip tag={t} fallback="Other" />
+      <span className="mini-tags">
+        <Chip tag={general} />
+        <Chip tag={specific} />
+        {!general && !specific && <Chip fallback="Other" />}
+      </span>
     </div>
   );
 }
 
 function Cell({
-  date, day, outside, onOpen, max,
+  date, day, outside, onOpen, max, compact,
 }: {
   date: string;
   day: number;
   outside?: boolean;
   onOpen: (d: string) => void;
   max: number;
+  compact: boolean;
 }) {
   const list = useByDate().get(date) ?? [];
   const sum = list.reduce((s, e) => s + e.amount, 0);
@@ -45,14 +87,14 @@ function Cell({
         {sum > 0 && <span className="dsum">{money(sum)}</span>}
       </div>
       {list.slice(0, max).map((e) => (
-        <Mini key={e.id} e={e} />
+        <Mini key={`${e.id}-${compact ? "minimal" : "full"}`} e={e} compact={compact} />
       ))}
       {list.length > max && <div className="more">+{list.length - max} more</div>}
     </button>
   );
 }
 
-export function MonthView({ cursor, onOpen }: { cursor: Date; onOpen: (d: string) => void }) {
+export function MonthView({ cursor, onOpen, compact }: { cursor: Date; onOpen: (d: string) => void; compact: boolean }) {
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const start = startOfWeek(first);
   const last = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
@@ -71,20 +113,21 @@ export function MonthView({ cursor, onOpen }: { cursor: Date; onOpen: (d: string
           outside={d.getMonth() !== cursor.getMonth()}
           onOpen={onOpen}
           max={3}
+          compact={compact}
         />
       ))}
     </div>
   );
 }
 
-export function WeekView({ start, onOpen }: { start: Date; onOpen: (d: string) => void }) {
+export function WeekView({ start, onOpen, compact }: { start: Date; onOpen: (d: string) => void; compact: boolean }) {
   const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
   return (
     <div className="week">
       {days.map((d) => (
         <div key={fmt(d)}>
           <div className="dow">{DOW[d.getDay()]}</div>
-          <Cell date={fmt(d)} day={d.getDate()} onOpen={onOpen} max={20} />
+          <Cell date={fmt(d)} day={d.getDate()} onOpen={onOpen} max={20} compact={compact} />
         </div>
       ))}
     </div>

@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "@/lib/auth";
 import { LedgerProvider, useLedger } from "@/lib/store";
 import { AuthForm } from "./AuthForm";
 import { Header } from "./Header";
+import { DisplayPreferences } from "@/lib/displayPreferences";
 
 export function Shell({ children }: { children: ReactNode }) {
   return (
@@ -38,14 +39,16 @@ function Content({ children }: { children: ReactNode }) {
   }
   return (
     <div className="shell">
-      <Header />
-      {saveError && (
-        <div className="storage-warning" role="alert">
-          <span>Calendar changes could not be saved: {saveError}</span>
-          <button className="link" onClick={retrySave}>Retry</button>
-        </div>
-      )}
-      {children}
+      <DisplayPreferences>
+        <Header />
+        {saveError && (
+          <div className="storage-warning" role="alert">
+            <span>Calendar changes could not be saved: {saveError}</span>
+            <button className="link" onClick={retrySave}>Retry</button>
+          </div>
+        )}
+        {children}
+      </DisplayPreferences>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { EntryForm, EntryRow } from "./Entries";
 import { MonthView, WeekView } from "./Views";
 import { Summary } from "./Summary";
 import { ExportMonth } from "./ExportMonth";
+import { useDisplayPreferences } from "@/lib/displayPreferences";
 
 export function GoToToday({ view }: { view: CalView }) {
   const router = useRouter();
@@ -27,6 +28,7 @@ export function CalendarRoute({ view, param }: { view: CalView; param: string })
 
 function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
   const { entries } = useLedger();
+  const { compact, setCompact } = useDisplayPreferences();
   const router = useRouter();
   const cur = parse(cursor);
 
@@ -59,6 +61,26 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
       <div className="bar">
         <h1>{label}</h1>
         <div className="bar-right">
+          {(view === "month" || view === "week") && (
+            <div className="tag-density" role="group" aria-label="Calendar tag display">
+              <button
+                type="button"
+                className={!compact ? "selected" : ""}
+                aria-pressed={!compact}
+                onClick={() => setCompact(false)}
+              >
+                Full
+              </button>
+              <button
+                type="button"
+                className={compact ? "selected" : ""}
+                aria-pressed={compact}
+                onClick={() => setCompact(true)}
+              >
+                Minimal
+              </button>
+            </div>
+          )}
           {view === "month" && <ExportMonth month={cursor.slice(0, 7)} />}
           <span className="total">{money(total)}</span>
           <Link className="btn" href={pathFor(view, stepDate(view, cur, -1))} aria-label="Previous">‹</Link>
@@ -72,8 +94,8 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
       <div className="cols">
         <section className="main fade" key={view + cursor}>
           {view === "day" && <DayList date={cursor} />}
-          {view === "week" && <WeekView start={startOfWeek(cur)} onOpen={(d) => router.push(dayPath(d))} />}
-          {view === "month" && <MonthView cursor={cur} onOpen={(d) => router.push(dayPath(d))} />}
+          {view === "week" && <WeekView start={startOfWeek(cur)} onOpen={(d) => router.push(dayPath(d))} compact={compact} />}
+          {view === "month" && <MonthView cursor={cur} onOpen={(d) => router.push(dayPath(d))} compact={compact} />}
         </section>
         <aside className="side">
           <Summary entries={inRange} total={total} />
