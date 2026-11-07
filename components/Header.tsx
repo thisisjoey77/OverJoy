@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { fmt, parse } from "@/lib/date";
 import { cursorFromParam, pathFor, type CalView } from "@/lib/routes";
@@ -25,7 +26,10 @@ export function Header() {
 
   return (
     <header className="top">
-      <Link href="/" className="brand">DayQuid</Link>
+      <Link href="/" className="brand">
+        <Image src="/logo.webp" alt="DayQuid logo" width={24} height={24} className="brand-logo" />
+        <span className="brand-text">DayQuid</span>
+      </Link>
       <nav className="tabs">
         {VIEWS.map((v) => (
           <Link
@@ -37,6 +41,7 @@ export function Header() {
           </Link>
         ))}
         <Link href="/tags" className={"tab" + (seg === "tags" ? " on" : "")}>Tags</Link>
+        <Link href="/subscriptions" className={"tab" + (seg === "subscriptions" ? " on" : "")}>Subscriptions</Link>
       </nav>
       <ProfileMenu />
     </header>

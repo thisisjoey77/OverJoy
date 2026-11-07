@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useLedger } from "@/lib/store";
 import { DOW, MONTHS, addDays, fmt, money, parse, shortDate, startOfWeek } from "@/lib/date";
 import { cursorFromParam, dayPath, pathFor, stepDate, type CalView } from "@/lib/routes";
+import { subscriptionChargesInRange } from "@/lib/subscriptions";
 import { EntryForm, EntryRow } from "./Entries";
 import { MonthView, WeekView } from "./Views";
 import { Summary } from "./Summary";
@@ -27,7 +28,7 @@ export function CalendarRoute({ view, param }: { view: CalView; param: string })
 }
 
 function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
-  const { entries } = useLedger();
+  const { entries, subscriptions, general } = useLedger();
   const { compact, setCompact, appearance } = useDisplayPreferences();
   const router = useRouter();
   const cur = parse(cursor);
@@ -50,6 +51,14 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
   const inRange = useMemo(
     () => entries.filter((e) => e.date >= from && e.date <= to),
     [entries, from, to],
+  );
+  const subscriptionCharges = useMemo(
+    () => subscriptionChargesInRange(subscriptions, { from, to }, general),
+    [subscriptions, from, to, general],
+  );
+  const subscriptionTotal = useMemo(
+    () => subscriptionCharges.reduce((sum, charge) => sum + charge.amount, 0),
+    [subscriptionCharges],
   );
   const total = inRange.reduce((s, e) => s + e.amount, 0);
 
@@ -82,7 +91,12 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
             </div>
           )}
           {view === "month" && <ExportMonth month={cursor.slice(0, 7)} />}
-          <span className="total">{money(total)}</span>
+          <div className="totals">
+            <span className="total">{money(total)}</span>
+            {subscriptionTotal > 0 && (
+              <span className="sub-total">{money(subscriptionTotal)} subscriptions</span>
+            )}
+          </div>
           <Link className="btn" href={pathFor(view, stepDate(view, cur, -1))} aria-label="Previous">‹</Link>
           <Link className="btn" href={pathFor(view, new Date())}>Today</Link>
           <Link className="btn" href={pathFor(view, stepDate(view, cur, 1))} aria-label="Next">›</Link>
@@ -98,7 +112,7 @@ function Calendar({ view, cursor }: { view: CalView; cursor: string }) {
           {view === "month" && <MonthView cursor={cur} onOpen={(d) => router.push(dayPath(d))} compact={compact} appearance={appearance} />}
         </section>
         <aside className="side">
-          <Summary entries={inRange} total={total} />
+          <Summary entries={inRange} total={total} subscriptionTotal={subscriptionTotal} />
         </aside>
       </div>
     </main>

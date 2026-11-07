@@ -20,8 +20,21 @@ export type Entry = {
   general: string;
   specific: string;
 };
+export type SubscriptionCadence = "monthly" | "yearly";
+export type SubscriptionPlan = {
+  id: string;
+  startsOn: string;
+  amount: number;
+  cadence: SubscriptionCadence;
+};
+export type Subscription = {
+  id: string;
+  specific: string;
+  endsOn: string;
+  plans: SubscriptionPlan[];
+};
 export type Kind = "general" | "specific";
-export type Data = { general: Tag[]; specific: Tag[]; entries: Entry[] };
+export type Data = { general: Tag[]; specific: Tag[]; entries: Entry[]; subscriptions: Subscription[] };
 
 const uid = () => crypto.randomUUID();
 
@@ -45,7 +58,26 @@ const seed = (): Data => {
     s("Vending", "#000000", "#a9d6e0"),
     s("Hotel", "#c4e05a", "#243624"),
   ];
-  return { general, specific, entries: [] };
+  return { general, specific, entries: [], subscriptions: [] };
+};
+
+const sortPlans = (plans: SubscriptionPlan[]) =>
+  [...plans].sort((a, b) => a.startsOn.localeCompare(b.startsOn));
+
+const normalizeData = (value: Data | null): Data => {
+  if (!value) return seed();
+  return {
+    general: Array.isArray(value.general) ? value.general : [],
+    specific: Array.isArray(value.specific) ? value.specific : [],
+    entries: Array.isArray(value.entries) ? value.entries : [],
+    subscriptions: Array.isArray(value.subscriptions)
+      ? value.subscriptions.map((subscription) => ({
+          ...subscription,
+          endsOn: subscription.endsOn ?? "",
+          plans: sortPlans(Array.isArray(subscription.plans) ? subscription.plans : []),
+        }))
+      : [],
+  };
 };
 
 type Ctx = {
@@ -57,6 +89,7 @@ type Ctx = {
   general: Tag[];
   specific: Tag[];
   entries: Entry[];
+  subscriptions: Subscription[];
   tag: (kind: Kind, id: string) => Tag | undefined;
   addEntry: (e: Omit<Entry, "id">) => void;
   updateEntry: (id: string, e: Omit<Entry, "id">) => void;
@@ -64,12 +97,16 @@ type Ctx = {
   addTag: (kind: Kind, name: string) => void;
   updateTag: (kind: Kind, id: string, patch: Partial<Tag>) => void;
   removeTag: (kind: Kind, id: string, replacementId?: string) => void;
+  addSubscription: (subscription: Omit<Subscription, "id" | "plans"> & { plans: Omit<SubscriptionPlan, "id">[] }) => void;
+  updateSubscription: (id: string, patch: Partial<Pick<Subscription, "specific" | "endsOn">>) => void;
+  addSubscriptionPlan: (subscriptionId: string, plan: Omit<SubscriptionPlan, "id">) => void;
+  removeSubscription: (id: string) => void;
 };
 
 const LedgerContext = createContext<Ctx | null>(null);
 
 export function LedgerProvider({ children, userId, token }: { children: ReactNode; userId: string; token: string }) {
-  const [data, setData] = useState<Data>({ general: [], specific: [], entries: [] });
+  const [data, setData] = useState<Data>({ general: [], specific: [], entries: [], subscriptions: [] });
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -82,7 +119,7 @@ export function LedgerProvider({ children, userId, token }: { children: ReactNod
     setLoadError(null);
     repository
       .load(userId, token)
-      .then((d) => setData(d ?? seed()))
+      .then((d) => setData(normalizeData(d)))
       .catch((error: unknown) => {
         if (active) setLoadError(error instanceof Error ? error.message : "Could not load calendar data");
       })
@@ -128,6 +165,7 @@ export function LedgerProvider({ children, userId, token }: { children: ReactNod
       general: data.general,
       specific: data.specific,
       entries: data.entries,
+      subscriptions: data.subscriptions,
       tag,
       addEntry: (e) =>
         setData((d) => ({ ...d, entries: [...d.entries, { ...e, id: uid() }] })),
@@ -155,6 +193,51 @@ export function LedgerProvider({ children, userId, token }: { children: ReactNod
           entries: d.entries.map((e) =>
             e[kind] === id ? { ...e, [kind]: replacementId } : e,
           ),
+          subscriptions:
+            kind === "specific"
+              ? d.subscriptions.map((subscription) =>
+                  subscription.specific === id ? { ...subscription, specific: replacementId } : subscription,
+                )
+              : d.subscriptions,
+        })),
+      addSubscription: (subscription) =>
+        setData((d) => ({
+          ...d,
+          subscriptions: [
+            ...d.subscriptions,
+            {
+              id: uid(),
+              ...subscription,
+              plans: sortPlans(subscription.plans.map((plan) => ({ ...plan, id: uid() }))),
+            },
+          ],
+        })),
+      updateSubscription: (id, patch) =>
+        setData((d) => ({
+          ...d,
+          subscriptions: d.subscriptions.map((subscription) =>
+            subscription.id === id ? { ...subscription, ...patch } : subscription,
+          ),
+        })),
+      addSubscriptionPlan: (subscriptionId, plan) =>
+        setData((d) => ({
+          ...d,
+          subscriptions: d.subscriptions.map((subscription) =>
+            subscription.id === subscriptionId
+              ? {
+                  ...subscription,
+                  plans: sortPlans([
+                    ...subscription.plans.filter((existing) => existing.startsOn !== plan.startsOn),
+                    { ...plan, id: uid() },
+                  ]),
+                }
+              : subscription,
+          ),
+        })),
+      removeSubscription: (id) =>
+        setData((d) => ({
+          ...d,
+          subscriptions: d.subscriptions.filter((subscription) => subscription.id !== id),
         })),
     }),
     [data, ready, tag],

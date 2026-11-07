@@ -33,13 +33,18 @@ function Group({ kind, title, entries, total }: {
   );
 }
 
-export function Summary({ entries, total }: { entries: Entry[]; total: number }) {
+export function Summary({ entries, total, subscriptionTotal }: { entries: Entry[]; total: number; subscriptionTotal: number }) {
+  const combinedTotal = total + subscriptionTotal;
+  const subscriptionShare = combinedTotal ? (subscriptionTotal / combinedTotal) * 100 : 0;
   return (
     <div>
       <div className="group">
         <h2>Total</h2>
-        <div className="big">{money(total)}</div>
-        <p className="muted small">{entries.length} payments</p>
+        <div className="big">{money(combinedTotal)}</div>
+        <p className="muted small">{entries.length} manual payments</p>
+        <p className="muted small">
+          Subscription portion: {money(subscriptionTotal)} ({subscriptionShare.toFixed(1)}%)
+        </p>
       </div>
       <Group kind="general" title="By category" entries={entries} total={total} />
       <Group kind="specific" title="By tag" entries={entries} total={total} />
